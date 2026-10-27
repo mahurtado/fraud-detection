@@ -1,6 +1,8 @@
 # Financial Fraud Detection Workshop — Student Challenge Solutions
 
-This document contains the reference `%%spanner_graph` ISO GQL solutions and verified query outputs for all **6 Student Challenges** in [fraud_detection_workshop.ipynb](./fraud_detection_workshop.ipynb) (one challenge per Anti-Money Laundering / Fraud pattern).
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mahurtado/fraud-detection/blob/main/assets/fraud_detection_workshop.ipynb)
+
+This document contains the reference `%%spanner_graph` ISO GQL solutions and verified query outputs for all **6 Student Challenges** in `assets/fraud_detection_workshop.ipynb` [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mahurtado/fraud-detection/blob/main/assets/fraud_detection_workshop.ipynb) (one challenge per Anti-Money Laundering / Fraud pattern).
 
 ---
 

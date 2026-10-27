@@ -1,5 +1,7 @@
 # Specification: End-to-End Financial Fraud Detection Workshop (Cloud Spanner Graph, BigQuery, GNN & MCP)
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mahurtado/fraud-detection/blob/main/assets/fraud_detection_workshop.ipynb)
+
 ## 1. Overview & Objectives
 This specification defines the implemented architecture, repository layout, data model, and 11-section interactive workshop workflow for the **Financial Fraud Detection Lab** hosted at [`https://github.com/mahurtado/fraud-detection`](https://github.com/mahurtado/fraud-detection).
 
@@ -47,7 +49,7 @@ fraud-detection/
 
 ## 3. Configurable Environment Parameters (`# @param`)
 
-The notebook (`assets/fraud_detection_workshop.ipynb`) and helper scripts avoid hardcoded project names or user emails. All settings are configured via Colab UI parameters (`# @param`) in Section `0.1`:
+The notebook (`assets/fraud_detection_workshop.ipynb` [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mahurtado/fraud-detection/blob/main/assets/fraud_detection_workshop.ipynb)) and helper scripts avoid hardcoded project names or user emails. All settings are configured via Colab UI parameters (`# @param`) in Section `0.1`:
 
 | Parameter | Default Placeholder | Description |
 | :--- | :--- | :--- |
@@ -91,6 +93,8 @@ Generated deterministically by `assets/generate_fraud_data.py` (`--seed 42`) and
 ---
 
 ## 5. End-to-End Notebook Structure (`assets/fraud_detection_workshop.ipynb`)
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mahurtado/fraud-detection/blob/main/assets/fraud_detection_workshop.ipynb)
 
 The notebook is organized into **11 sections (`0` through `10`, `83` cells total)**:
 

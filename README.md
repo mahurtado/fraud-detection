@@ -60,7 +60,7 @@ flowchart LR
 | :--- | :--- |
 | [`README.md`](./README.md) | Workshop overview, architecture diagrams, example fraud graphs, and setup guide. |
 | [`SPEC_FRAUD.md`](./SPEC_FRAUD.md) | Detailed technical specification reflecting the actual implementation state. |
-| [`assets/fraud_detection_workshop.ipynb`](./assets/fraud_detection_workshop.ipynb) | **End-to-End Interactive Notebook (83 cells, Sections `0`–`10`)** with `# @param` UI controls, automatic GitHub file download, BigQuery staging, Reverse ETL, `EXTERNAL_DATASET`, `%%spanner_graph` visual queries, 6 Student Challenges, GNN training, 2D PCA visualization, and MCP agent execution. |
+| `assets/fraud_detection_workshop.ipynb` [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mahurtado/fraud-detection/blob/main/assets/fraud_detection_workshop.ipynb) | **End-to-End Interactive Notebook (83 cells, Sections `0`–`10`)** with `# @param` UI controls, automatic GitHub file download, BigQuery staging, Reverse ETL, `EXTERNAL_DATASET`, `%%spanner_graph` visual queries, 6 Student Challenges, GNN training, 2D PCA visualization, and MCP agent execution. |
 | [`assets/CHALLENGE_SOLUTIONS.md`](./assets/CHALLENGE_SOLUTIONS.md) | Reference `%%spanner_graph` ISO GQL solutions and verified outputs for all **6 Student Challenges**. |
 | [`assets/schema.sql`](./assets/schema.sql) | Cloud Spanner DDL for `Person`, `Account` (with `embedding ARRAY<FLOAT64>(vector_length=>128)`), `Device`, interleaved `Owns`, `UsesDevice`, `Transfer`, secondary indexes, and `CREATE OR REPLACE PROPERTY GRAPH FraudGraph`. |
 | [`assets/queries_gql.sql`](./assets/queries_gql.sql) | Standalone ISO GQL queries for all 6 AML fraud patterns plus BigQuery-Spanner interoperability SQL (`EXTERNAL_DATASET`, `EXTERNAL_QUERY`, and `EXPORT DATA`). |
@@ -289,7 +289,7 @@ flowchart LR
 
 ## 6. Quickstart: Running the Workshop Notebook in Google Colab
 
-1. Open [`assets/fraud_detection_workshop.ipynb`](./assets/fraud_detection_workshop.ipynb) in Google Colab or JupyterLab.
+1. Open the notebook in Google Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mahurtado/fraud-detection/blob/main/assets/fraud_detection_workshop.ipynb)
 2. In **Section 0 (`0.1 Workshop Configuration Parameters`)**, fill in the `# @param` form fields:
    - `PROJECT_ID`: Your Google Cloud project ID.
    - `REGION`: `europe-west1` (default).
