@@ -1,4 +1,18 @@
 #!/usr/bin/env python3
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """Loads synthetic fraud graph CSVs into Cloud Spanner using batched mutations.
 
 Follows Spanner bulk write best practices:
@@ -16,6 +30,7 @@ import json
 import os
 import subprocess
 from typing import Any
+import urllib.error
 import urllib.request
 
 
@@ -148,50 +163,71 @@ def load_via_rest(
         headers=headers,
         method="POST",
     )
-    with urllib.request.urlopen(req) as resp:
-        session_name = json.loads(resp.read().decode("utf-8"))["name"]
+    try:
+        with urllib.request.urlopen(req) as resp:
+            session_name = json.loads(resp.read().decode("utf-8"))["name"]
+    except urllib.error.HTTPError as e:
+        err_msg = e.read().decode("utf-8")
+        raise RuntimeError(f"Failed to create Spanner session: {err_msg}") from e
 
     print(f"Created Spanner session: {session_name}")
 
-    for cfg in TABLE_CONFIGS:
-        table = cfg["table"]
-        csv_path = os.path.join(data_dir, cfg["csv"])
-        columns = cfg["columns"]
-        col_types = cfg["types"]
+    try:
+        for cfg in TABLE_CONFIGS:
+            table = cfg["table"]
+            csv_path = os.path.join(data_dir, cfg["csv"])
+            columns = cfg["columns"]
+            col_types = cfg["types"]
 
-        rows: list[list[Any]] = []
-        with open(csv_path, "r", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                rows.append([
-                    _cast_for_rest(row[c], col_types.get(c, "str"))
-                    for c in columns
-                ])
+            rows: list[list[Any]] = []
+            with open(csv_path, "r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    rows.append([
+                        _cast_for_rest(row[c], col_types.get(c, "str"))
+                        for c in columns
+                    ])
 
-        total_rows = len(rows)
-        for start in range(0, total_rows, batch_size):
-            batch = rows[start : start + batch_size]
-            payload = {
-                "singleUseTransaction": {"readWrite": {}},
-                "mutations": [
-                    {
-                        "insertOrUpdate": {
-                            "table": table,
-                            "columns": columns,
-                            "values": batch,
+            total_rows = len(rows)
+            for start in range(0, total_rows, batch_size):
+                batch = rows[start : start + batch_size]
+                payload = {
+                    "singleUseTransaction": {"readWrite": {}},
+                    "mutations": [
+                        {
+                            "insertOrUpdate": {
+                                "table": table,
+                                "columns": columns,
+                                "values": batch,
+                            }
                         }
-                    }
-                ],
-            }
-            commit_req = urllib.request.Request(
-                f"https://spanner.googleapis.com/v1/{session_name}:commit",
-                data=json.dumps(payload).encode("utf-8"),
-                headers=headers,
-                method="POST",
-            )
-            with urllib.request.urlopen(commit_req) as resp:
-                _ = resp.read()
-            print(f"[{table}] Committed rows {start + 1}..{min(start + batch_size, total_rows)} / {total_rows}")
+                    ],
+                }
+                commit_req = urllib.request.Request(
+                    f"https://spanner.googleapis.com/v1/{session_name}:commit",
+                    data=json.dumps(payload).encode("utf-8"),
+                    headers=headers,
+                    method="POST",
+                )
+                try:
+                    with urllib.request.urlopen(commit_req) as resp:
+                        _ = resp.read()
+                except urllib.error.HTTPError as e:
+                    err_msg = e.read().decode("utf-8")
+                    raise RuntimeError(f"Commit failed for table {table}: {err_msg}") from e
+                print(f"[{table}] Committed rows {start + 1}..{min(start + batch_size, total_rows)} / {total_rows}")
+    finally:
+        # Delete the session
+        delete_req = urllib.request.Request(
+            f"https://spanner.googleapis.com/v1/{session_name}",
+            headers=headers,
+            method="DELETE",
+        )
+        try:
+            with urllib.request.urlopen(delete_req) as resp:
+                pass
+        except Exception:
+            pass
 
 
 def main() -> None:

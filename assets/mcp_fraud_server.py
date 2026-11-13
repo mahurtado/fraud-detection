@@ -1,4 +1,18 @@
 #!/usr/bin/env python3
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """Model Context Protocol (MCP) Server for Agentic Fraud Graph Investigation.
 
 Exposes Spanner Graph (`FraudGraph`) traversal tools over stdio (JSON-RPC 2.0)
@@ -32,6 +46,7 @@ import os
 import subprocess
 import sys
 from typing import Any
+import urllib.error
 import urllib.request
 
 
@@ -187,8 +202,12 @@ class SpannerGraphClient:
             },
             method="POST",
         )
-        with urllib.request.urlopen(req) as resp:
-            payload = json.loads(resp.read().decode("utf-8"))
+        try:
+            with urllib.request.urlopen(req) as resp:
+                payload = json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            err_msg = e.read().decode("utf-8")
+            raise RuntimeError(f"Spanner query failed: {err_msg}") from e
         fields = [
             f["name"]
             for f in payload.get("metadata", {}).get("rowType", {}).get("fields", [])
