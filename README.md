@@ -59,7 +59,6 @@ flowchart LR
 | Path | Description |
 | :--- | :--- |
 | [`README.md`](./README.md) | Workshop overview, architecture diagrams, example fraud graphs, Managed Spanner MCP guide, and setup instructions. |
-| [`SPEC_FRAUD.md`](./SPEC_FRAUD.md) | Detailed technical specification reflecting the actual implementation state. |
 | `assets/fraud_detection_workshop.ipynb` [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mahurtado/fraud-detection/blob/main/assets/fraud_detection_workshop.ipynb) | **End-to-End Interactive Notebook (83 cells, Sections `0`–`10`)** with `# @param` UI controls, automatic GitHub file download, BigQuery staging, Reverse ETL, `EXTERNAL_DATASET`, `%%spanner_graph` visual queries, 6 Student Challenges, GNN training, 2D PCA visualization, and Cloud Spanner Managed MCP Server (`https://spanner.googleapis.com/mcp`) compliance triage. |
 | [`assets/CHALLENGE_SOLUTIONS.md`](./assets/CHALLENGE_SOLUTIONS.md) | Reference `%%spanner_graph` ISO GQL solutions and verified outputs for all **6 Student Challenges**. |
 | [`assets/schema.sql`](./assets/schema.sql) | Cloud Spanner DDL for `Person`, `Account` (with `embedding ARRAY<FLOAT64>(vector_length=>128)`), `Device`, interleaved `Owns`, `UsesDevice`, `Transfer`, secondary indexes, and `CREATE OR REPLACE PROPERTY GRAPH FraudGraph`. |
